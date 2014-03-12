@@ -5,8 +5,15 @@ var Task = {
   tasks: [
     {
       id: '1',
-      title: 'foo',
-      done: false,
+      title: 'ScrumBoard entwickeln',
+      description: 'Eine Scrum Board Applikation in NodeJS entwickeln!',
+      status: 'Todo'
+    },
+    {
+      id: '2',
+      title: 'Jasmin Tests schreiben',
+      description: 'Jasmin Tests für das ScrumBoard schreiben',
+      status: 'In Progress'
     }
   ],
   last_id: 1,
