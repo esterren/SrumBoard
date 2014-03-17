@@ -7,16 +7,16 @@ var Task = {
       id: '1',
       title: 'ScrumBoard entwickeln',
       description: 'Eine Scrum Board Applikation in NodeJS entwickeln!',
-      status: 'Todo'
+      state: 'Todo'
     },
     {
       id: '2',
       title: 'Jasmin Tests schreiben',
       description: 'Jasmin Tests für das ScrumBoard schreiben',
-      status: 'In Progress'
+      state: 'In Progress'
     }
   ],
-  last_id: 1,
+  last_id: 2,
 
   getNextId: function () {
     this.last_id += 1;

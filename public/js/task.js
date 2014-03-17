@@ -9,10 +9,11 @@ $(function () {
 // Model
 
     var Task = Backbone.Model.extend({
+
         defaults: {
             title: '',
             description: '',
-            status: 'Todo'
+            state: 'Todo'
         }
 
     });
@@ -26,7 +27,10 @@ $(function () {
 
     var TaskView = Backbone.View.extend({
 
-        //tagName: 'li',
+//        tagName: 'li',
+//        className: 'ui-state-default',
+        //tagName: 'div',
+      //  el:$('#todo'),
 
         template: _.template($('#item-template').html()),
 
@@ -34,15 +38,38 @@ $(function () {
             this.listenTo(this.model, 'change', this.render);
         },
 
+        events: {
+            //'drop' : 'drop'
+            'click .portlet-toggle': "togglePortlet"
+        },
+        togglePortlet: function(event,index){
+            console.log('in togglePortlet')
+/*            var icon = $(this);
+            icon.toggleClass( "ui-icon-minusthick ui-icon-plusthick" );
+            icon.closest( ".portlet" ).find( ".portlet-content" ).toggle();*/
+        },
+        /*drop: function(event, index) {
+            this.$el.trigger('update-sort', [this.model, index]);
+        },*/
+
         render: function () {
-            this.$el.html(this.template(this.model.toJSON()));
+
+            var card = $(this.template(this.model.toJSON()));
+            card.addClass( "ui-widget ui-widget-content ui-helper-clearfix ui-corner-all" )
+                .find( ".portlet-header" )
+                .addClass( "ui-widget-header ui-corner-all" )
+                .prepend( "<span class='ui-icon ui-icon-minusthick portlet-toggle'></span>");
+
+            //$(this.el).append(card);
+            this.$el.html(card);
+
             return this;
         }
     });
 
     var TaskList = Backbone.View.extend({
         el: $('#task-list'),
-
+//        el: $('#srumboard'),
         render: function () {
             console.log('called render');
         },
@@ -65,7 +92,7 @@ $(function () {
 
         addItem: function (item) {
             var taskView = new TaskView({ model: item });
-            this.$el.append(taskView.render().el);
+            $('#todo').append(taskView.render().el);
         },
 
         addAll: function() {
@@ -85,18 +112,7 @@ $(function () {
 
     var taskList = new TaskList;
 
-
-    // Jquery UI Sortable Lists
-    $( "ul.droptrue" ).sortable({
-        connectWith: "ul"
-    });
-
-    $( "ul.dropfalse" ).sortable({
-        connectWith: "ul",
-        dropOnEmpty: false
-    });
-
-    $( "#sortable1, #sortable2, #sortable3" ).disableSelection();
+    //$( "#sortable1, #sortable2, #sortable3" ).disableSelection();
 
 /*    $( "#sortable1, #sortable2" ).sortable({
         connectWith: ".connectedSortable"
@@ -111,16 +127,17 @@ $(function () {
         placeholder: "portlet-placeholder ui-corner-all"
     });
 
-    $( ".portlet" )
-        .addClass( "ui-widget ui-widget-content ui-helper-clearfix ui-corner-all" )
-        .find( ".portlet-header" )
-        .addClass( "ui-widget-header ui-corner-all" )
-        .prepend( "<span class='ui-icon ui-icon-minusthick portlet-toggle'></span>");
+//    $( ".portlet" )
+//        .addClass( "ui-widget ui-widget-content ui-helper-clearfix ui-corner-all" )
+//        .find( ".portlet-header" )
+//        .addClass( "ui-widget-header ui-corner-all" )
+//        .prepend( "<span class='ui-icon ui-icon-minusthick portlet-toggle'></span>");
 
-    $( ".portlet-toggle" ).click(function() {
+/*    $( ".portlet-toggle" ).click(function() {
         var icon = $( this );
         icon.toggleClass( "ui-icon-minusthick ui-icon-plusthick" );
         icon.closest( ".portlet" ).find( ".portlet-content" ).toggle();
-    });
+    });*/
+
 
 });
