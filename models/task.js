@@ -14,9 +14,16 @@ var Task = {
       title: 'Jasmin Tests schreiben',
       description: 'Jasmin Tests für das ScrumBoard schreiben',
       state: 'In Progress'
-    }
+    },
+
+      {
+          id: '3',
+          title: 'Buy milk',
+          description: 'Buy 1l of milk',
+          state: 'Done'
+      }
   ],
-  last_id: 2,
+  last_id: 3,
 
   getNextId: function () {
     this.last_id += 1;
@@ -50,7 +57,7 @@ var Task = {
 
   update: function(data) {
     console.log('updating with ' + data);
-    for (var i = 0; i < this.taks.length; i++) {
+    for (var i = 0; i < this.tasks.length; i++) {
       if (this.tasks[i].id == data['id']) {
         Task.merge(this.tasks[i], data);
         return this.tasks[i];

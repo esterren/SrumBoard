@@ -6,10 +6,6 @@
     <title>ScrumBoard</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/ui-darkness/jquery-ui-1.10.4.custom.css">
-    <style>
-        #sortable1, #sortable2, #sortable3 { list-style-type: none; margin: 0; padding: 0; float: left; margin-right: 10px; background: #eee; padding: 5px; width: 143px;}
-        #sortable1 li, #sortable2 li, #sortable3 li { margin: 5px; padding: 5px; font-size: 1.2em; width: 120px; }
-    </style>
 </head>
 
 <body>
@@ -17,14 +13,35 @@
 <h1>Scrum Board</h1>
 
 <div id="task-list">
-    <input id="new-task" type="text" placeholder="What needs to be done?">
-    <input id="add-item" type="button" value="Add">
+    <input id="new-task-title" type="text" placeholder="Title?">
+    <select id="new-task-state">
+        <option value="Todo">Todo</option>
+        <option value="In Progress">In Progress</option>
+        <option value="Done">Done</option>
+    </select>
+    <br>
+    <textarea id="new-task-description" rows="3" cols="50" maxlength="100" placeholder="Describe it!"></textarea><br>
+    <input id="add-item" type="button" value="Add new Task">
 </div>
 
 <br>
 
 
 <div id="scrumboard">
+    <!--    <div class="column-header" id="todo-header">Todo</div>
+        <div class="column-header" id="inprogress-header">In Progress</div>
+        <div class="column-header" id="done-header">Done</div>-->
+    <div class="column-header">
+        <h3>Todo</h3>
+    </div>
+    <div class="column-header">
+        <h3>In Progress</h3>
+    </div>
+    <div class="column-header">
+        <h3>Done</h3>
+    </div>
+    <br style="clear:both">
+
     <div class="column" id="todo">
     </div>
     <div class="column" id="inprogress">
@@ -47,8 +64,6 @@
 
 <script src="js/task.js"></script>
 <script src="js/libs/jquery/jquery-ui-1.10.4.custom.js"></script>
-
-<br style="clear:both">
 
 
 </body>

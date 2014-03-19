@@ -1,7 +1,9 @@
 body {
-  padding: 50px;
+  /*padding: 50px;*/
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
   min-width: 520px;
+  width: 900px;
+  margin: 0 auto;
 }
 
 a {
@@ -9,9 +11,16 @@ a {
 }
 
 .column {
-    width: 170px;
+    width: 300px;
     float: left;
     padding-bottom: 100px;
+}
+.column-header {
+    width: 220px;
+    float: left;
+    padding-left: 10px;
+    padding-right: 70px;
+    font-weight: bold;
 }
 .portlet {
     margin: 0 1em 1em 0;
@@ -22,7 +31,7 @@ a {
     margin-bottom: 0.5em;
     position: relative;
 }
-.portlet-toggle {
+.portlet-delete {
     position: absolute;
     top: 50%;
     right: 0;
@@ -30,9 +39,13 @@ a {
 }
 .portlet-content {
     padding: 0.4em;
+    white-space: pre-line;
 }
 .portlet-placeholder {
     border: 1px dotted black;
     margin: 0 1em 1em 0;
     height: 50px;
+}
+textarea{
+    resize: none;
 }
