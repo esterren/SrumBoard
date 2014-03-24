@@ -5,13 +5,14 @@
 
 $(function () {
 
-
 // Model
 
     var Task = Backbone.Model.extend({
         defaults: {
             title: '',
             description: '',
+            assignedto:'',
+            cost:'1',
             state: 'Todo'
         }
     });
@@ -25,10 +26,6 @@ $(function () {
 
     var TaskView = Backbone.View.extend({
 
-//        tagName: 'li',
-//        className: 'ui-state-default',
-        //tagName: 'div',
-      //  el:$('#todo'),
 
         template: _.template($('#item-template').html()),
 
@@ -37,15 +34,14 @@ $(function () {
         },
 
         events: {
-            'update' : 'updateTask',
-            'click .portlet-delete': "deleteTask"
+            'sortupdate' : 'updateState',
+            'click .portlet-delete': "deleteTask",
+            'click .portlet-edit': "editTask"
         },
-        updateTask: function(event, index) {
-            /*console.log('in drop function');
-            console.log(this.$el);
-            console.log(this.model, index);*/
+        updateState: function(event, index) {
+
             var parentcolumn = this.$el.closest('.column').attr('id');
-//            console.log(parentcolumn);
+
             if (parentcolumn =="todo" && this.model.get('state')!=='Todo'){
                 this.model.save('state', 'Todo');
             }else if (parentcolumn =='inprogress' && this.model.get('state')!=='In Progress'){
@@ -56,9 +52,49 @@ $(function () {
             //this.$el.trigger('update-task', [this.model, index]);
         },
         deleteTask: function(event,index){
-            this.model.destroy();
-            console.log(this)
-            $(this.el).remove();
+            var thatmodel = this.model;
+            var thatel = this.el;
+            var callback = function(value){
+                // if Yes
+                if(value){
+                    thatmodel.destroy();
+                    $(thatel).remove();
+                }
+            };
+            //Open the Confirmdialog
+            fnOpenConfirmDialog('Delete Task','Do you really want to delete this task?', callback);
+
+
+        },
+    editTask: function(event,index){
+        console.log('in editTask');
+        var thatmodel = this.model;
+
+        var thatel = this.el;
+        var callback = function(task,value){
+            if(value){
+                console.log('task edited');
+                // if Edit
+                //thatmodel.save(data);
+                thatmodel.save(task);
+                $(thatel).detach();
+//                $(thatel).remove();
+//                var state = thatmodel.get('state');
+
+                if (task.state =="Todo"){
+                    $('#todo').append(thatel);
+                }else if (task.state =='In Progress'){
+                    $('#inprogress').append(thatel);
+
+                }else if (task.state =='Done'){
+                    $('#done').append(thatel);
+                }
+
+                }
+            };
+
+            fnOpenEditDialog(this.model,callback);
+
 
         },
 
@@ -68,7 +104,7 @@ $(function () {
             card.addClass( "ui-widget ui-widget-content ui-helper-clearfix ui-corner-all" )
                 .find( ".portlet-header" )
                 .addClass( "ui-widget-header ui-corner-all" )
-                .prepend( "<span class='ui-icon ui-icon-trash portlet-delete'></span>");
+                .prepend( "<span class='ui-icon ui-icon-pencil portlet-edit'></span><span class='ui-icon ui-icon-trash portlet-delete'></span>");
 
 
             this.$el.html(card);
@@ -93,7 +129,11 @@ $(function () {
 
         initialize: function () {
             this.delegateEvents(this.events);
-            this.input = $('#new-task-title');
+            this.title = $('#new-task-title'),
+            this.description = $('#new-task-description'),
+            this.state = $('#new-task-state'),
+            this.cost = $('#new-task-cost'),
+            this.assignedto = $('#new-task-assignto');
 
             this.listenTo(tasks, 'add', this.addItem);
             this.listenTo(tasks, 'reset', this.addAll);
@@ -125,24 +165,17 @@ $(function () {
             this.createItem();
         },
         createItem: function() {
-            if(!this.input.val()){
-                this.input.effect('highlight');
+            if(!this.title.val()){
+                this.title.effect('highlight');
                 return;
             }
-
-            tasks.create({ title: this.input.val(), description:$('#new-task-description').val(),state: $('#new-task-state').val() });
-            this.input.val('');
-            $('#new-task-description').val('');
-            $('#new-task-state').val('Todo');
-        }/*,
-        deleteItem: function(e){
-            console.log('in deleteItem');
-            console.log(tasks);
-            tasks.remove(this);
-            console.log(tasks);
-            //this.remove();
-
-        }*/
+            tasks.create({ title: this.title.val(), description:this.description.val(),state: this.state.val(), cost:this.cost.val(), assignedto: this.assignedto.val() });
+            this.title.val('');
+            this.description.val('');
+            this.state.val('Todo');
+            this.assignedto.val('');
+            this.cost.val('1');
+        }
     });
 
     var taskList = new TaskList;
@@ -162,21 +195,112 @@ $(function () {
         placeholder: "portlet-placeholder ui-corner-all",
         stop : function(event, ui){
 //            console.log(event, ui)
-            ui.item.trigger('update',ui.item.index());
+            ui.item.trigger('sortupdate',ui.item.index());
         }
     });
 
-//    $( ".portlet" )
-//        .addClass( "ui-widget ui-widget-content ui-helper-clearfix ui-corner-all" )
-//        .find( ".portlet-header" )
-//        .addClass( "ui-widget-header ui-corner-all" )
-//        .prepend( "<span class='ui-icon ui-icon-minusthick portlet-toggle'></span>");
-
-/*    $( ".portlet-toggle" ).click(function() {
-        var icon = $( this );
-        icon.toggleClass( "ui-icon-minusthick ui-icon-plusthick" );
-        icon.closest( ".portlet" ).find( ".portlet-content" ).toggle();
-    });*/
-
-
 });
+
+
+
+
+//    $("#dialog-confirm").html(htmlString);
+
+// Define the Dialog and its properties.
+
+function fnOpenConfirmDialog(title, htmlString, callback) {
+
+
+    $("#dialog-confirm").html(htmlString);
+    // Define the Dialog and its properties.
+    $("#dialog-confirm").dialog({
+        resizable: false,
+        modal: true,
+        draggable:false,
+        title: title,
+        height: 250,
+        width: 400,
+        buttons: {
+            "Yes": function () {
+                $(this).dialog('close');
+                callback(true);
+            },
+            "No": function () {
+                $(this).dialog('close');
+                callback(false);
+            }
+
+        }
+    });
+}
+
+function fnOpenEditDialog(model, callback) {
+    var title = model.get('title'),
+        state = model.get('state'),
+        description = model.get('description'),
+        assignedto = model.get('assignedto'),
+        cost = model.get('cost');
+
+    var htmlString = ' \
+        <form> \
+            <fieldset> \
+                <p><label for="title">Title:</label> \
+                <input type="text" name="title" id="title" class="text ui-widget-content ui-corner-all"><\p>\
+                <p><label for="state">State:</label> \
+                <select id="state" > \
+                    <option value="Todo">Todo</option> \
+                    <option value="In Progress">In Progress</option> \
+                    <option value="Done">Done</option> \
+                </select><\p> \
+                <p><label for="csot">Cost:</label> \
+                <select id="cost"> \
+                    <option value="1">1</option> \
+                    <option value="2">2</option> \
+                    <option value="3">3</option> \
+                    <option value="5">5</option> \
+                    <option value="8">8</option> \
+                </select><\p> \
+                <p><label for="assigendto">Assigend to:</label> \
+                <input type="text" name="assignedto" id="assignedto" class="text ui-widget-content ui-corner-all"><\p> \
+                <p><label for="description">Description:</label>\
+                <textarea name="description" id="description" rows="3" cols="40" maxlength="100" class="text ui-widget-content ui-corner-all"></textarea><\p> \
+            </fieldset> \
+            </form>';
+
+    $("#dialog-edit").html(htmlString);
+    $("#title").val(title);
+    $("#assignedto").val(assignedto);
+    $("#state option[value='"+state+"']").attr('selected',true);
+    $("#cost option[value='"+cost+"']").attr('selected',true);
+    $("#description").val(description);
+
+    $("#dialog-edit").dialog({
+//        autoOpen: false,
+        resizable: false,
+        modal: true,
+        draggable:false,
+        title: 'Edit Task',
+        height: 500,
+        width: 500,
+        buttons: {
+            "Edit": function () {
+                var task = { title:  $("#title").val(),
+                    description: $('#description').val(),
+                    assignedto: $('#assignedto').val(),
+                    cost: $('#cost').val(),
+                    state: $('#state').val()};
+
+                    console.log(task);
+                    $(this).dialog('close');
+
+                    callback(task,true);
+            },
+            "Cancel": function () {
+                $(this).dialog('close');
+//                callback(false);
+            }
+
+        }
+    });
+
+}

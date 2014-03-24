@@ -7,20 +7,26 @@ var Task = {
       id: '1',
       title: 'ScrumBoard entwickeln',
       description: 'Eine Scrum Board Applikation in NodeJS entwickeln!',
+      assignedto:'rest',
+      cost:'8',
       state: 'Todo'
     },
     {
       id: '2',
-      title: 'Jasmin Tests schreiben',
-      description: 'Jasmin Tests für das ScrumBoard schreiben',
+      title: 'Tests schreiben',
+      description: 'Tests für das ScrumBoard schreiben',
+      assignedto:'rest',
+      cost:'5',
       state: 'In Progress'
     },
 
-      {
-          id: '3',
-          title: 'Buy milk',
-          description: 'Buy 1l of milk',
-          state: 'Done'
+    {
+       id: '3',
+       title: 'Buy milk',
+       description: 'Buy 1l of milk',
+       assignedto:'sepp',
+       cost:'1',
+       state: 'Done'
       }
   ],
   last_id: 3,

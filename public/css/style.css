@@ -37,9 +37,18 @@ a {
     right: 0;
     margin-top: -8px;
 }
+.portlet-edit {
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    margin-top: -8px;
+}
 .portlet-content {
     padding: 0.4em;
+}
+.portlet-content div{
     white-space: pre-line;
+    word-wrap:break-word;
 }
 .portlet-placeholder {
     border: 1px dotted black;
