@@ -1,5 +1,4 @@
-// A blog post model
-
+// A simple task model
 
 var Task = {
   tasks: [

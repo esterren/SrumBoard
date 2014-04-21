@@ -1,6 +1,4 @@
-
-
-
+// Export all modules
 module.exports = function(app) {
 
   app.models = {}

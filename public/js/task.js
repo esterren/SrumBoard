@@ -67,13 +67,11 @@ $(function () {
 
         },
     editTask: function(event,index){
-        console.log('in editTask');
         var thatmodel = this.model;
 
         var thatel = this.el;
         var callback = function(task,value){
             if(value){
-                console.log('task edited');
                 // if Edit
                 //thatmodel.save(data);
                 thatmodel.save(task);
@@ -138,7 +136,6 @@ $(function () {
             this.listenTo(tasks, 'add', this.addItem);
             this.listenTo(tasks, 'reset', this.addAll);
             this.listenTo(tasks, 'all', this.render);
-            //this.listenTo(tasks, 'destroy', this.deleteItem);
             tasks.fetch({reset: true});
         },
 
@@ -180,13 +177,6 @@ $(function () {
 
     var taskList = new TaskList;
 
-    //$( "#sortable1, #sortable2, #sortable3" ).disableSelection();
-
-/*    $( "#sortable1, #sortable2" ).sortable({
-        connectWith: ".connectedSortable"
-    }).disableSelection();*/
-
-
     // Jquery UI Sortable Portlet
     $( ".column" ).sortable({
         connectWith: ".column",
@@ -204,7 +194,6 @@ $(function () {
 
 
 
-//    $("#dialog-confirm").html(htmlString);
 
 // Define the Dialog and its properties.
 
@@ -233,6 +222,7 @@ function fnOpenConfirmDialog(title, htmlString, callback) {
         }
     });
 }
+
 
 function fnOpenEditDialog(model, callback) {
     var title = model.get('title'),
@@ -284,16 +274,18 @@ function fnOpenEditDialog(model, callback) {
         width: 500,
         buttons: {
             "Edit": function () {
+                if($("#title").val()==''){
+                    $("#title").effect('highlight');
+                }else{
                 var task = { title:  $("#title").val(),
                     description: $('#description').val(),
                     assignedto: $('#assignedto').val(),
                     cost: $('#cost').val(),
                     state: $('#state').val()};
-
-                    console.log(task);
                     $(this).dialog('close');
 
                     callback(task,true);
+                }
             },
             "Cancel": function () {
                 $(this).dialog('close');
